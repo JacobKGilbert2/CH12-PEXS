@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include "fullTimeEmployee.h"
 #include "partTimeEmployee.h"
 int main()
@@ -8,5 +9,11 @@ int main()
     newEmp.print();
     cout << endl;
     tempEmp.print();
+
+    // prevents auto-close
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << "\nPress Enter to exit...";
+    cin.get();
+
     return 0;
 }
