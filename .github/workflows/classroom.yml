@@ -1,0 +1,41 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Simple Input Output Test
+      id: simple-input-output-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: Simple Input Output Test
+        setup-command: g++ main.cpp personTypeImp.cpp employeeTypeImp.cpp fullTimeEmployeeImp.cpp
+          partTimeEmployeeImp.cpp -o program
+        command: "./program"
+        input: ''
+        expected-output: |-
+          Id: 75
+          Name: John Smith
+          Wages: $61700
+
+          Id: 275
+          Name: Bill Nielson
+          Wages: $883.5
+        comparison-method: contains
+        timeout: 10
+        max-score: 2
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        SIMPLE-INPUT-OUTPUT-TEST_RESULTS: "${{steps.simple-input-output-test.outputs.result}}"
+      with:
+        runners: simple-input-output-test
